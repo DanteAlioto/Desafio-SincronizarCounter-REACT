@@ -1,49 +1,32 @@
-import React, { useState } from "react";
+import './itemCount.css';
 
-const ItemCount = ({stock, initial, onAdd}) => {
+import React, {useState, useEffect} from 'react'
 
-    const [cantidad, setCantidad] = useState(initial);
-    const [itemStock, setItemStock] = useState(stock);
-    const [itemAdd, setItemAdd] = useState(onAdd);
+const ItemCount = ({initial, stock, onAdd}) => {
+    const [count, setCount] = useState(parseInt(initial));
 
-const decrementarCantidad = (valor) => {
-    if (valor > 0) {
-        setCantidad(valor);
+    const decrease = () => {
+        setCount(count - 1);
     }
-}
-const incrementarCantidad = (valor) => {
-    if (valor <= itemStock) {
-        setCantidad(valor);
+
+    const increase = () => {
+        setCount(count + 1);
     }
-}
 
-const agregarProductos = () => {
-    if(cantidad <= itemStock){
-        setItemStock(itemStock - cantidad);
-        setItemAdd(itemAdd + cantidad);
-    }
-}
+    useEffect(() => {
+        setCount(parseInt(initial));
+    }, [initial])
 
-
-
-return(
-<div className="container py-5">
-    <div className="row">
-        <div className="col-md-2">
-            <p className="text-center">Nombre del producto</p>
-            <div className="input-group">
-                <input type="button" className="btn btn-secondary" value="-" onClick={() => {decrementarCantidad(cantidad - 1)}} />
-                <input type="text" className="form-control" value={cantidad} />
-                <input type="button" className="btn btn-secondary" value="+" onClick={() => {incrementarCantidad(cantidad + 1)}} />
-            </div>
-            <div className="d-grid gap-2">
-                <input type ="button" className="btn btn-secundary" value= "Agregar" onClick={() => {agregarProductos()}}/>
-            </div>
-            <p>Productos Seleccionados : {itemAdd} </p>
+    return (
+    <div className='counter'>
+        <button className='btn btn-dark text-white rounded-pill' disabled={count <= 1} onClick={decrease}>-</button>
+        <span>{count}</span>
+        <button className='btn btn-dark text-white rounded-pill' disabled={count >= stock}onClick={increase}>+</button>
+        <div>
+            <button disabled={stock <= 0} onClick = {() => onAdd(count)}>Agregar al carrito</button>
         </div>
     </div>
-</div>
-)
-};
+  )
+}
 
 export default ItemCount;
